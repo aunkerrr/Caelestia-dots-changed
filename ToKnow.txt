@@ -1,0 +1,93 @@
+# To return basic power settings (not recommended)
+# (Rollback: run this if you want to restore the Caelestia power menu buttons at the cost of battery life)
+sudo systemctl disable --now tlp
+sudo systemctl unmask power-profiles-daemon
+sudo systemctl enable --now power-profiles-daemon
+
+# ==============================================================================
+# Full optimization guide for Thinkpad E16 Gen 2 (Intel) + Arch + Hyprland + Caelestia Dots
+# (Power plan menu is not going to work, handled automatically and efficiently by TLP)
+# ==============================================================================
+
+# Turning off default power profile  
+# (Disabling the weak default power daemon to prevent conflicts with our custom settings)
+sudo systemctl disable --now power-profiles-daemon
+sudo systemctl mask power-profiles-daemon
+
+# Installing main optimization dependencies
+# (Installing TLP for advanced battery management and thermald to protect the CPU from overheating)
+sudo pacman -S tlp thermald 
+
+# Adding to autostartup 
+# (Enabling their automatic startup on system boot)
+sudo systemctl enable --now tlp.service
+sudo systemctl enable --now thermald.service
+
+# Open config 
+# (Opening the TLP configuration file)
+sudo nano /etc/tlp.conf
+
+# Setting up TLP
+# (Copy, paste, or uncomment the following lines in the tlp.conf file)
+
+# --- Charging limits (scheme: 45% plugged in / 55% on battery) ---
+# (Extending battery lifespan: preventing it from charging above 85% when plugged in)
+START_CHARGE_THRESH_BAT0=80
+STOP_CHARGE_THRESH_BAT0=90
+
+# --- Taming Intel 13th Gen on battery (working on E-cores) ---
+# (Disabling Turbo Boost and forcing the CPU to use efficient E-cores when disconnected from power)
+CPU_SCALING_GOVERNOR_ON_BAT=powersave
+CPU_ENERGY_PERF_POLICY_ON_BAT=balance_power
+CPU_BOOST_ON_BAT=0
+
+# --- Sleep for audio and Wi-Fi ---
+# (Putting audio and Wi-Fi modules to sleep when they are idle)
+SOUND_POWER_SAVE_ON_BAT=1
+SOUND_POWER_SAVE_CONTROLLER=Y
+WIFI_PWR_ON_BAT=on
+
+# Apply TLP settings
+# (Applying the settings immediately without rebooting)
+sudo tlp start
+
+
+# ==============================================================================
+# PART 2: Video Acceleration & Hyprland Optimization
+# ==============================================================================
+
+# Hardware Video Acceleration (VA-API)
+# (Installing drivers to ensure the integrated GPU handles video and animations, offloading the CPU)
+sudo pacman -S intel-media-driver libva-utils libva-intel-driver
+
+# Environment Variables setup
+# (Telling the system and apps to use hardware acceleration natively in Wayland)
+# Open ~/.config/hypr/configs/ENVS.conf (or your main hyprland.conf) and add:
+# env = LIBVA_DRIVER_NAME,iHD
+# env = VDPAU_DRIVER,va_gl
+# env = MOZ_ENABLE_WAYLAND,1
+# env = OZONE_PLATFORM,wayland
+
+# Variable Frame Rate (VFR) in Hyprland
+# (Killer feature: dynamically dropping the display refresh rate when the screen is static to save massive amounts of power)
+# Open ~/.config/hypr/hyprland.conf and ensure these lines exist in the 'misc' block:
+# misc {
+#     vfr = true
+#     vrr = 0
+# }
+
+
+# ==============================================================================
+# PART 3: Apps & Browser
+# ==============================================================================
+
+# Electron Apps (Discord, VS Code, Obsidian)
+# (By default, they run through XWayland, draining battery and blurring text. Force native Wayland)
+# Edit their .desktop shortcuts in /usr/share/applications/ and append these flags to the 'Exec' line:
+# --enable-features=UseOzonePlatform --ozone-platform=wayland
+
+# Firefox YouTube Optimization
+# (Forcing Firefox to offload video decoding directly to our Intel iGPU)
+# 1. Type "about:config" in the Firefox address bar.
+# 2. Search for "media.ffmpeg.vaapi.enabled".
+# 3. Set its value to "true" and restart the browser.

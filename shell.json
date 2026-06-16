@@ -234,7 +234,7 @@
     "enabled": true,
     "showOnHover": true,
     "mediaUpdateInterval": 500,
-    "resourceUpdateInterval": 1000,
+    "resourceUpdateInterval": 5000,
     "dragThreshold": 50,
     "performance": {
       "showBattery": true,
@@ -428,11 +428,13 @@
   },
   "notifs": {
     "expire": true,
+    "fullscreen": "on",
     "defaultExpireTimeout": 5000,
     "clearThreshold": 0.3,
     "expandThreshold": 20,
     "actionOnClick": false,
-    "groupPreviewNum": 3
+    "groupPreviewNum": 3,
+    "openExpanded": false
   },
   "osd": {
     "enabled": true,
@@ -482,6 +484,7 @@
     "maxToasts": 4,
     "toasts": {
       "configLoaded": true,
+      "fullscreen": "off",
       "chargingChanged": true,
       "gameModeChanged": true,
       "dndChanged": true,
@@ -496,7 +499,7 @@
     "vpn": {
       "enabled": false,
       "provider": [
-        "netbird"
+        {}
       ]
     },
     "quickToggles": [
@@ -552,12 +555,15 @@
         "to": "YT Music"
       }
     ],
-    "showLyrics": false
+    "showLyrics": true,
+    "lyricsBackend": "Auto"
   },
   "paths": {
     "wallpaperDir": "/home/ritta/Pictures/Wallpapers",
     "lyricsDir": "/home/ritta/Music/lyrics/",
     "sessionGif": "root:/assets/kurukuru.gif",
-    "mediaGif": "root:/assets/bongocat.gif"
+    "mediaGif": "root:/assets/bongocat.gif",
+    "noNotifsPic": "root:/assets/dino.png",
+    "lockNoNotifsPic": "root:/assets/dino.png"
   }
 }

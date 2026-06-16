@@ -1,5 +1,6 @@
 # BINDS WHICH OVERRDING CAELESTIA'S 
 bind = $mainMod, Return, exec, $terminal # SUPER + ENTER = TERMINAL (foot)
+bind = $mainMod, E, exec, $fileManager # SUPER + ENTER = FILE MANAGER (dolphin)
 
 animations {
     enabled = yes
@@ -32,21 +33,10 @@ input {
     
     follow_mouse = 1
 
-    # sensitivity = 1       # Range: -1.0 to 1.0, 0 is default
-    # accel_profile = flat # Disables mouse acceleration while respecting sensvity    
-    
     touchpad {
         natural_scroll = yes
-        scroll_factor = 1.5  
+        scroll_factor = 1.5  # Та самая скорость скролла, которую мы обсуждали
     }
 }
 
 # AUTOSTART
-env = LIBVA_DRIVER_NAME,iHD
-env = VDPAU_DRIVER,va_gl
-env = MOZ_ENABLE_WAYLAND,1
-env = OZONE_PLATFORM,wayland
-
-# Main desktop apps opening (not in hidden pocket)
-windowrule = workspace e+0, match:class discord
-windowrule = workspace e+0, match:class vesktop
