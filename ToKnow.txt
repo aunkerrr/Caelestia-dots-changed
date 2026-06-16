@@ -91,3 +91,14 @@ sudo pacman -S intel-media-driver libva-utils libva-intel-driver
 # 1. Type "about:config" in the Firefox address bar.
 # 2. Search for "media.ffmpeg.vaapi.enabled".
 # 3. Set its value to "true" and restart the browser.
+
+# How to Enable Native Wayland in IntelliJ IDEA
+
+#Go to Help -> Edit Custom VM Options... (or double-press Shift and type it).
+
+# Add this exact line at the bottom of the file:
+# Plaintext
+
+# -Dawt.toolkit.name=WLToolkit
+
+# Save the file and **restart the IDE**.
